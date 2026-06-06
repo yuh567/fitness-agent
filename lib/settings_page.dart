@@ -139,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
         height: _profile!.height,
         weight: _profile!.weight,
         bodyFat: _profile!.bodyFat,
-        goal: getGoalTypeName(_goals!.type ?? 'muscle_gain'),
+        goal: getGoalTypeName(_goals!.type),
         experienceLevel: _profile!.experienceLevel,
         trainingDaysPerWeek: _profile!.trainingDaysPerWeek,
         preferredDuration: _profile!.preferredDuration,
@@ -441,7 +441,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ..._equipmentList.map((e) => ListTile(
                 dense: true,
                 leading: const Icon(Icons.fitness_center, color: Colors.deepOrange, size: 20),
-                title: Text(e.name, style: const TextStyle(color: Colors.white, fontSize: 14)),
+                title: Text(e.name ?? '', style: const TextStyle(color: Colors.white, fontSize: 14)),
                 subtitle: Text('${e.equipmentType} · 最大 ${e.maxWeight != null ? formatWeight(e.maxWeight!) : '无限制'}', style: TextStyle(color: Colors.grey[500], fontSize: 12)),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
