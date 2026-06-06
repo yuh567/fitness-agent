@@ -5,7 +5,6 @@ import 'models.dart';
 import 'utils.dart';
 import 'plan_engine.dart';
 import 'workout_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// 铁匠铺主页
 /// 深炭灰背景 + 活力橙强调色，所有UI文字使用中文

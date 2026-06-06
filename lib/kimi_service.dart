@@ -40,7 +40,7 @@ class KimiApiService {
 - 体重：${profile.weight ?? '未设置'}kg
 - 体脂率：${profile.bodyFat ?? '未设置'}%
 - 训练经验：${profile.experienceLevel ?? '未知'}
-- 总训练容量：${history.totalVolume.toStringAsFixed(0)}kg
+- 总训练容量：${history.totalVolume?.toStringAsFixed(0) ?? '0'}kg
 - 总训练次数：${history.totalWorkouts}次
 - 训练年限：${history.years}年
 
@@ -76,19 +76,19 @@ class KimiApiService {
     }
 
     final db = DBHelper();
-    final absenceRecords = await db.query('absence_records', orderBy: 'date DESC', limit: 10);
+    final absenceRecords = await db.query('absence_records', orderBy: 'date DESC');
 
     final prompt = '''
 你是一位专业健身教练和运动科学专家。请分析用户最近训练数据并给出调整建议，以JSON格式返回。
 
 最近训练记录（最近20条）：
-${logs.take(20).map((l) => '- ${l.completedAt ?? '未知'}: 动作ID${l.exerciseId}, ${l.weight}kg × ${l.sets}组, 次数${l.reps}, RPE${l.rpe ?? '无'}').join('\n')}
+${logs.take(20).map((l) => '- ${l.createdAt ?? '未知'}: 动作ID${l.exerciseId}, ${l.actualWeight}kg × ${l.actualSets}组, 次数${l.actualRepsJson}, RPE无').join('\n')}
 
 最近身体数据：
 ${metrics.take(10).map((m) => '- ${m.date ?? '未知'}: 体重${m.weight ?? '未知'}kg, 体脂${m.bodyFat ?? '未知'}%').join('\n')}
 
 最近状态记录：
-${statuses.take(10).map((s) => '- ${s.date ?? '未知'}: 睡眠${s.sleepHours ?? '未知'}h, 疲劳度${s.fatigueLevel ?? '未知'}/10, 心情${s.mood ?? '未知'}').join('\n')}
+${statuses.take(10).map((s) => '- ${s.date ?? '未知'}: 睡眠${s.sleepHours ?? '未知'}h, 精力${s.energyLevel ?? '未知'}/10').join('\n')}
 
 请假记录：
 ${absenceRecords.map((a) => '- ${a['date']}: ${a['reason']}').join('\n')}
