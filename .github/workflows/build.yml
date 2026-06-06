@@ -15,10 +15,14 @@ jobs:
       - run: flutter pub get
       - run: |
           echo "## Flutter Analyze" >> $GITHUB_STEP_SUMMARY
-          flutter analyze --fatal-infos 2>&1 | tee analyze.log || true
+          flutter analyze 2>&1 | tee analyze.log || true
           echo '```' >> $GITHUB_STEP_SUMMARY
-          head -100 analyze.log >> $GITHUB_STEP_SUMMARY
+          cat analyze.log >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+          if grep -q "error" analyze.log; then
+            echo "❌ Analyze found errors" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
       - run: |
           echo "## Flutter Build" >> $GITHUB_STEP_SUMMARY
           flutter build apk --release 2>&1 | tee build.log
