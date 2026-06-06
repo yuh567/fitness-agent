@@ -13,20 +13,18 @@ jobs:
           sed -i 's/compileSdkVersion flutter.compileSdkVersion/compileSdkVersion 34/' android/app/build.gradle
           sed -i 's/targetSdkVersion flutter.targetSdkVersion/targetSdkVersion 34/' android/app/build.gradle
       - run: flutter pub get
-      - run: flutter analyze --fatal-infos 2>&1 | tee analyze.log || true
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: analyze-logs
-          path: analyze.log
-      - run: flutter build apk --release 2>&1 | tee build.log
-        continue-on-error: true
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: build-logs
-          path: build.log
       - run: |
+          echo "## Flutter Analyze" >> $GITHUB_STEP_SUMMARY
+          flutter analyze --fatal-infos 2>&1 | tee analyze.log || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          head -100 analyze.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      - run: |
+          echo "## Flutter Build" >> $GITHUB_STEP_SUMMARY
+          flutter build apk --release 2>&1 | tee build.log || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -100 build.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
           if grep -q "BUILD FAILED" build.log || grep -q "Compilation failed" build.log || grep -q "error" build.log; then
             echo "Build failed with errors"
             exit 1
