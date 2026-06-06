@@ -186,7 +186,8 @@ class _WorkoutPageState extends State<WorkoutPage> with TickerProviderStateMixin
 
   void _changeWeight(double delta) {
     final record = _currentRecord;
-    final newWeight = ((record.weight + delta) * 2).round() / 2;
+    final currentWeight = record.weight ?? 0.0;
+    final newWeight = ((currentWeight + delta) * 2).round() / 2;
     if (newWeight < 0) return;
     setState(() {
       record.weight = newWeight;
@@ -387,7 +388,7 @@ class _WorkoutPageState extends State<WorkoutPage> with TickerProviderStateMixin
         totalSets++;
         if (set.completed) {
           completedSets++;
-          totalVolume += record.weight * (set.actualReps ?? 0);
+          totalVolume += (record.weight ?? 0.0) * (set.actualReps ?? 0);
         }
       }
     }
@@ -625,7 +626,7 @@ class _WorkoutPageState extends State<WorkoutPage> with TickerProviderStateMixin
               children: [
                 Expanded(
                   child: Text(
-                    ex.name,
+                    ex.name ?? '',
                     style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
@@ -636,14 +637,14 @@ class _WorkoutPageState extends State<WorkoutPage> with TickerProviderStateMixin
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    ex.targetMuscle,
+                    ex.targetMuscle ?? '',
                     style: const TextStyle(fontSize: 12, color: Colors.deepOrange, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            _buildExpandableDescription(ex.description),
+            _buildExpandableDescription(ex.description ?? ''),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -655,7 +656,7 @@ class _WorkoutPageState extends State<WorkoutPage> with TickerProviderStateMixin
                 ),
               ],
             ),
-            if (ex.adjustmentNote != null && ex.adjustmentNote!.isNotEmpty) ...[
+            if (ex.description != null && ex.description!.isNotEmpty) ...[
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -663,7 +664,7 @@ class _WorkoutPageState extends State<WorkoutPage> with TickerProviderStateMixin
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      ex.adjustmentNote!,
+                      ex.description!,
                       style: TextStyle(fontSize: 12, color: Colors.green[400]),
                     ),
                   ),

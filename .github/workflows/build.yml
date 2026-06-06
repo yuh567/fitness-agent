@@ -9,6 +9,7 @@ jobs:
         with:
           flutter-version: '3.16.0'
       - run: flutter create . --project-name fitness_agent
+      - run: rm -rf test
       - run: |
           sed -i 's/compileSdkVersion flutter.compileSdkVersion/compileSdkVersion 34/' android/app/build.gradle
           sed -i 's/targetSdkVersion flutter.targetSdkVersion/targetSdkVersion 34/' android/app/build.gradle
