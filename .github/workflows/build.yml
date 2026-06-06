@@ -19,6 +19,8 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
           cat analyze.log >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "Error count: $(grep -c 'error' analyze.log || echo 0)" >> $GITHUB_STEP_SUMMARY
           if grep -q "error" analyze.log; then
             echo "❌ Analyze found errors" >> $GITHUB_STEP_SUMMARY
             exit 1
