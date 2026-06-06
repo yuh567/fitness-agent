@@ -108,7 +108,7 @@ class _WorkoutPageState extends State<WorkoutPage> with TickerProviderStateMixin
         final w = (logs.first['weight'] as num?)?.toDouble();
         if (w != null && w > 0) {
           setState(() {
-            _lastUsedWeights[record.exercise.id] = w;
+            _lastUsedWeights[record.exercise.id ?? 0] = w;
           });
         }
       }
