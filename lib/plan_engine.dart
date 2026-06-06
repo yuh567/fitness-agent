@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'database/db_helper.dart';
 import 'models.dart';
 import 'utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
 
 /// AI计划引擎：根据用户档案、历史记录和可用器材生成每日训练计划
 class PlanEngine {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'database/db_helper.dart';
-import 'models.dart';
 
 // ============================================================
 // 数据模型：收集所有 Onboarding 步骤的数据

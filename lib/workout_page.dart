@@ -76,7 +76,7 @@ class _WorkoutPageState extends State<WorkoutPage> with TickerProviderStateMixin
 
     for (var i = 0; i < _records.length; i++) {
       _weightControllers[i] = TextEditingController(
-        text: _records[i].weight.toStringAsFixed(1).replaceAll('.0', ''),
+        text: (_records[i].weight ?? 0.0).toStringAsFixed(1).replaceAll('.0', ''),
       );
       _repsControllers[i] = {};
       _repsFocusNodes[i] = {};

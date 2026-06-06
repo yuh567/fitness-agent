@@ -4,9 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'database/db_helper.dart';
 import 'home_page.dart';
 import 'onboarding.dart';
-import 'workout_page.dart';
-import 'settings_page.dart';
-import 'kimi_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

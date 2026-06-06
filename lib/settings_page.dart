@@ -131,7 +131,21 @@ class _SettingsPageState extends State<SettingsPage> {
     await prefs.setString('fitness_goals', _goals!.toJson());
     // 同步到 user_profile 的 goal 字段
     if (_profile != null) {
-      _profile!.goal = getGoalTypeName(_goals!.type);
+      final updatedProfile = UserProfile(
+        id: _profile!.id,
+        name: _profile!.name,
+        gender: _profile!.gender,
+        age: _profile!.age,
+        height: _profile!.height,
+        weight: _profile!.weight,
+        bodyFat: _profile!.bodyFat,
+        goal: getGoalTypeName(_goals!.type ?? 'muscle_gain'),
+        experienceLevel: _profile!.experienceLevel,
+        trainingDaysPerWeek: _profile!.trainingDaysPerWeek,
+        preferredDuration: _profile!.preferredDuration,
+        createdAt: _profile!.createdAt,
+      );
+      _profile = updatedProfile;
       await _saveProfile();
     }
   }
@@ -276,12 +290,21 @@ class _SettingsPageState extends State<SettingsPage> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.deepOrange),
             onPressed: () async {
-              _profile ??= UserProfile(name: nameCtrl.text);
-              _profile!.name = nameCtrl.text;
-              _profile!.height = double.tryParse(heightCtrl.text);
-              _profile!.weight = double.tryParse(weightCtrl.text);
-              _profile!.bodyFat = double.tryParse(fatCtrl.text);
-              _profile!.goal = goalCtrl.text.isEmpty ? null : goalCtrl.text;
+              final updatedProfile = UserProfile(
+                id: _profile?.id,
+                name: nameCtrl.text.isEmpty ? null : nameCtrl.text,
+                gender: _profile?.gender,
+                age: _profile?.age,
+                height: double.tryParse(heightCtrl.text),
+                weight: double.tryParse(weightCtrl.text),
+                bodyFat: double.tryParse(fatCtrl.text),
+                goal: goalCtrl.text.isEmpty ? null : goalCtrl.text,
+                experienceLevel: _profile?.experienceLevel,
+                trainingDaysPerWeek: _profile?.trainingDaysPerWeek,
+                preferredDuration: _profile?.preferredDuration,
+                createdAt: _profile?.createdAt,
+              );
+              _profile = updatedProfile;
               await _saveProfile();
               if (mounted) {
                 setState(() {});
@@ -419,7 +442,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 dense: true,
                 leading: const Icon(Icons.fitness_center, color: Colors.deepOrange, size: 20),
                 title: Text(e.name, style: const TextStyle(color: Colors.white, fontSize: 14)),
-                subtitle: Text('${e.type} · 最大 ${e.maxWeight != null ? formatWeight(e.maxWeight!) : '无限制'}', style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                subtitle: Text('${e.equipmentType} · 最大 ${e.maxWeight != null ? formatWeight(e.maxWeight!) : '无限制'}', style: TextStyle(color: Colors.grey[500], fontSize: 12)),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20),
                   onPressed: () async {
@@ -479,7 +502,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 if (nameCtrl.text.isEmpty) return;
                 final eq = UserEquipment(
                   name: nameCtrl.text,
-                  type: selectedType,
+                  equipmentType: selectedType,
                   maxWeight: double.tryParse(weightCtrl.text),
                 );
                 setState(() => _equipmentList.add(eq));
@@ -711,10 +734,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   setState(() => _isLoading = true);
                   try {
                     final db = DBHelper();
-                    final logs = await db.query('workout_logs', orderBy: 'completed_at DESC', limit: 20);
-                    final metrics = await db.query('body_metrics', orderBy: 'date DESC', limit: 10);
-                    final logModels = logs.map((l) => WorkoutLog.fromMap(l)).toList();
-                    final metricModels = metrics.map((m) => BodyMetrics.fromMap(m)).toList();
+                    final logs = await db.query('workout_logs', orderBy: 'completed_at DESC');
+                    final metrics = await db.query('body_metrics', orderBy: 'date DESC');
+                    final logModels = logs.take(20).map((l) => WorkoutLog.fromMap(l)).toList();
+                    final metricModels = metrics.take(10).map((m) => BodyMetrics.fromMap(m)).toList();
                     final result = await _kimi.requestTrainingAnalysis(logModels, metricModels, []);
                     await _setLastAiTime();
                     if (mounted && result != null) {
