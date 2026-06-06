@@ -1,0 +1,21 @@
+name: fitness_agent
+description: 本地智能健身Agent
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sqflite: ^2.3.0
+  path_provider: ^2.1.1
+  path: ^1.8.3
+  http: ^1.1.0
+  shared_preferences: ^2.2.2
+  intl: ^0.18.1
+  flutter_svg: ^2.0.9
+
+flutter:
+  uses-material-design: true
